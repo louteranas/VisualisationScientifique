@@ -15,12 +15,22 @@ def parsingInput():
                 points.append(point)
     return points
 
-def main():
+def main1():
     polygone = Polygone(parsingInput())
-    polygone.draw()
+    polygone.draw(len(polygone.points))
     input("continue ?")
     polygone.decompositionTotale()
-    polygone.draw()
+    polygone.draw(4)
     input("continue ?")
     polygone.recompositionTotale()
-    polygone.draw()
+    polygone.draw(len(polygone.points))
+
+def main2():
+    polygone = Polygone(parsingInput())
+    polygone.draw(len(polygone.points))
+    input("continue ?")
+    polygone.decompositionTotale()
+    polygone.draw(4)
+    input("continue ?")
+    polygone.recompositionTotale()
+    polygone.draw(len(polygone.points))

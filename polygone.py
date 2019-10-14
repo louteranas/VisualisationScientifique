@@ -4,7 +4,7 @@ class Polygone:
     def __init__(self, points = []):
         self.points = points;
 
-    def partialDecompose(n):
+    def partialDecompose(n, seuil):
         for i in range(n//2):
             self.points[i] = (0.25 * (-self.points[(2*i-2)%length(self.points)] +\
                                     3*self.points[(2*i-1)%length(self.points)] + \
