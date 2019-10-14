@@ -34,3 +34,5 @@ def main2():
     input("continue ?")
     polygone.recompositionTotale()
     polygone.draw(len(polygone.points))
+
+main1()
