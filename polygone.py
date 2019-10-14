@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import matplotlib.pyplot as plt
+
 class Polygone:
     def __init__(self, points = []):
         self.points = points;
@@ -32,3 +34,8 @@ class Polygone:
         while n < len(self.points):
             self.partialRecompose(n)
             n *= 2
+
+    def draw(n):
+        tempArray = self.points[0:n];
+        tempArray.append(self.points[0]);
+        plt.plot(tempArray);
