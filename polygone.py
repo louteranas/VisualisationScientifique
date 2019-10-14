@@ -9,10 +9,7 @@ class Polygone:
     def partialDecompose(self, n, seuil = None):
         lengthPoints = len(self.points)
         for i in range(n//2):
-            self.points[i] = (0.25 * ( 3*self.points[(2*i-1)%lengthPoints] -\
-                                    self.points[(2*i-2)%lengthPoints] +\
-                                    3*self.points[(2*i)%lengthPoints] - \
-                                    self.points[(2*i+1)%lengthPoints]))
+            self.points[i] = (0.25 * ( (3*self.points[(2*i-1)%lengthPoints]) - self.points[(2*i-2)%lengthPoints] + (3*self.points[(2*i)%lengthPoints]) - self.points[(2*i+1)%lengthPoints]))
             self.points[i + (n//2)] = (0.25 * (self.points[(2*i-2)%lengthPoints] -\
                                     3*self.points[(2*i-1)%lengthPoints] + \
                                     3*self.points[(2*i)%lengthPoints] - \
@@ -41,3 +38,4 @@ class Polygone:
         tempArray = self.points[0:n];
         tempArray.append(self.points[0]);
         plt.plot(tempArray);
+        plt.show()
