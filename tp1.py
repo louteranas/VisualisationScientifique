@@ -37,13 +37,16 @@ def maintest():
 
 def main2():
     polygone = Polygone(parsingInput())
+    input("Affichage avant traitement (Appuyer sur entree)")
     polygone.draw(len(polygone.points))
-    #input("continue ?")
-    polygone.decompositionTotale(0.05)
+    seuil = float(input("Quel seuil (float) ?   "))
+    polygone.decompositionTotale(seuil)
     #polygone.draw(4)
-    input("continue ?")
+    input("Affichage après décomposition et recomposition (Appuyer sur entree)")
     polygone.recompositionTotale()
     polygone.draw(len(polygone.points))
 
+if len(sys.argv) < 2:
+    exit("Veuillez saisir un nom de fichier .d")
 
 main2()

@@ -10,6 +10,7 @@ class Polygone:
         self.points = points
 
     def partialDecompose(self, n, seuil):
+        seuil = seuil ** 2
         pointstemp = list(self.points)
         lengthPoints = n
         for i in range(n // 2):
@@ -21,7 +22,7 @@ class Polygone:
                                     3 * self.points[(2 * i - 1) % lengthPoints] + \
                                     3 * self.points[(2 * i) % lengthPoints] - \
                                     self.points[(2 * i + 1) % lengthPoints])
-            pointstemp[i + (n // 2)] = pointstemp[i + (n // 2)] if (seuil == None or (abs(pointstemp[i + (n // 2)][0]) >= seuil and abs(pointstemp[i + (n // 2)][1]) >= seuil)) else np.array([0.0, 0.0])
+            pointstemp[i + (n // 2)] = pointstemp[i + (n // 2)] if (seuil == None or (pointstemp[i + (n // 2)][0] ** 2  + pointstemp[i + (n // 2)][1] ** 2 >= seuil)) else np.array([0.0, 0.0])
         self.points = pointstemp
 
     def partialRecompose(self, n):
