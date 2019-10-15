@@ -10,8 +10,8 @@ def parsingInput():
         texte = argument.read()
         points_str = texte.split("\n")
         for point_str in points_str:
-            point = np.array(point_str.split(" "))
-            if np.size(point) == 2:
+            if point_str != "":
+                point = np.array([float(f) for f in point_str.split(" ")])
                 points.append(point)
     return points
 
@@ -25,14 +25,25 @@ def main1():
     polygone.recompositionTotale()
     polygone.draw(len(polygone.points))
 
-def main2():
+def maintest():
     polygone = Polygone(parsingInput())
     polygone.draw(len(polygone.points))
     input("continue ?")
-    polygone.decompositionTotale()
-    polygone.draw(4)
+    polygone.partialDecompose(len(polygone.points))
+    polygone.draw(len(polygone.points)//2)
+    input("continue ?")
+    polygone.partialRecompose(len(polygone.points)//2)
+    polygone.draw(len(polygone.points))
+
+def main2():
+    polygone = Polygone(parsingInput())
+    polygone.draw(len(polygone.points))
+    #input("continue ?")
+    polygone.decompositionTotale(0.05)
+    #polygone.draw(4)
     input("continue ?")
     polygone.recompositionTotale()
     polygone.draw(len(polygone.points))
 
-main1()
+
+main2()
