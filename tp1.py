@@ -36,12 +36,15 @@ def maintest():
     polygone.draw(len(polygone.points))
 
 def main2():
+    ## On parse l'input et on  crée un polygone correspondant 
     polygone = Polygone(parsingInput())
+
     input("Affichage avant traitement (Appuyer sur entree)")
+    ## On affiche le polygone avant la décomposition
     polygone.draw(len(polygone.points))
     seuil = float(input("Quel seuil (float) ?   "))
     polygone.decompositionTotale(seuil)
-    #polygone.draw(4)
+    
     input("Affichage après décomposition et recomposition (Appuyer sur entree)")
     polygone.recompositionTotale()
     polygone.draw(len(polygone.points))
