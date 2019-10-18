@@ -2,7 +2,9 @@
 
 from polygone import Polygone
 import numpy as np
+import matplotlib.pyplot as plt
 import sys
+import math
 
 def parsingInput():
     points = []
@@ -14,6 +16,34 @@ def parsingInput():
                 point = np.array([float(f) for f in point_str.split(" ")])
                 points.append(point)
     return points
+
+def distanceInBetween(pointA, pointB):
+    return  math.sqrt(pow((pointA[0] - pointB[0]), 2) + pow((pointA[1] - pointB[1]), 2))
+
+def getError(pointsA, pointsB):
+    if(len(pointsA)) != len(pointsB):
+        print("Problème de taille")
+        return
+    Sum = 0
+    for i in range(len(pointsA)):
+        Sum += distanceInBetween(pointsA[i], pointsB[i])
+    return math.sqrt(Sum)
+
+
+def main3():
+    startPoints = parsingInput()
+    errors = []
+    indexes = []
+    for i in range(500):
+        polygone1 = Polygone(startPoints)
+        polygone2 = Polygone(startPoints)
+        polygone2.decompositionTotale(i/100)
+        polygone2.recompositionTotale()
+        errors.append(getError(polygone1.points, polygone2.points))
+        indexes.append(i/100)
+    plt.plot(errors, indexes)
+    plt.show()
+        
 
 def main1():
     polygone = Polygone(parsingInput())
@@ -52,4 +82,4 @@ def main2():
 if len(sys.argv) < 2:
     exit("Veuillez saisir un nom de fichier .d")
 
-main2()
+main3()
