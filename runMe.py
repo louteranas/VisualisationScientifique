@@ -31,31 +31,39 @@ def getError(pointsA, pointsB):
     return math.sqrt(Sum)
 
 def main4():
+    print("############## Changement des points puis recompositionTotale ###################")
+    print("\n")
     startPoints = parsingInput()
     polygone1 = Polygone(startPoints)
     polygone2 = Polygone(startPoints)
     polygone2.decompositionTotale(0)
-    for i in range(20):
+    number = int(input("Veuillez entrer le nombre de sommets à déplacer aléatoirement: "))
+    for i in range(number):
         polygone2.points[rd.randrange(0, len(polygone2.points))] += np.array([rd.randrange(0, 5),rd.randrange(0, 5)])
     polygone2.recompositionTotale()
-    #polygone1.draw(len(polygone1.points))
-    input('deformed polygone')
+    print("Voici votre image recomposée après " + str(number) + " sommet(s) modifiés :")
+    input("appuyez sur enter pour continuer....")
     polygone2.draw(len(polygone2.points))
 
 def main3():
+    print("############## Calcul d'erreur après recomposition avec un seuil ###################")
+    print("\n")
     startPoints = parsingInput()
     errors = []
     indexes = []
-    expo = []
+    print("Les seuil et les erreurs qui y correspondent seront affiché de la manière suivante:")
+    print("Seuil =======> erreur")
+    input("appuyez sur enter pour continuer....")
     for i in range(500):
         polygone1 = Polygone(startPoints)
         polygone2 = Polygone(startPoints)
         polygone2.decompositionTotale(i/100)
         polygone2.recompositionTotale()
         errors.append(getError(polygone1.points, polygone2.points))
-        print(i/100)
-        print(errors[-1])
+        print("Seuil : " + str(i/100) + "=======> erreur : " + str(errors[-1]))
         indexes.append(i/100)
+    print("Voici le graphe des résultats :")
+    input("appuyez sur enter pour continuer....")
     plt.plot(indexes, errors)
     plt.xlabel("Seuil")
     plt.ylabel("Erreur")
@@ -64,13 +72,19 @@ def main3():
 
 def main1():
     polygone = Polygone(parsingInput())
+    print("############## Décomposition puis reconposition sans Seuil ###################")
+    print("\n")
+    print("=============> Image initial")
+    input("Veuillez fermer la fênetre puis appuyez sur Enter pour continuer...")
     polygone.draw(len(polygone.points))
-    input("continue ?")
-    polygone.decompositionTotale()
-    polygone.draw(4)
-    input("continue ?")
+    input()
+    print("=============> Traitement en cours...")
+    polygone.decompositionTotale(0)
     polygone.recompositionTotale()
+    print("=============> Image finale")
+    input("Veuillez fermer la fênetre puis appuyez sur Enter pour continuer...")
     polygone.draw(len(polygone.points))
+
 
 def maintest():
     polygone = Polygone(parsingInput())
@@ -85,18 +99,36 @@ def maintest():
 def main2():
     ## On parse l'input et on  crée un polygone correspondant
     polygone = Polygone(parsingInput())
-
-    input("Affichage avant traitement (Appuyer sur entree)")
+    print("############## Décomposition puis reconposition sans Seuil ###################")
+    print("\n")
+    print("=============> Image initial")
     ## On affiche le polygone avant la décomposition
+    input("Veuillez fermer la fênetre puis appuyez sur Enter pour continuer...")
     polygone.draw(len(polygone.points))
-    seuil = float(input("Quel seuil (float) ?   "))
+    seuil = float(input("Veuilez entrer une valeur pour le seuil (float) ?   "))
+    print("=============> Traitement en cours...")
     polygone.decompositionTotale(seuil)
-
-    input("Affichage après décomposition et recomposition (Appuyer sur entree)")
     polygone.recompositionTotale()
+    print("=============> Image finale")
+    input("Veuillez fermer la fênetre puis appuyez sur Enter pour continuer...")
     polygone.draw(len(polygone.points))
 
 if len(sys.argv) < 2:
     exit("Veuillez saisir un nom de fichier .d")
 
+main1()
+print("\n\n\n\n\n\n")
+main2()
+print("\n\n\n\n\n\n")
+main3()
+print("\n\n\n\n\n\n")
 main4()
+print("\n\n\n\n\n\n")
+main4()
+print("\n\n\n\n\n\n")
+main4()
+print("\n\n\n\n\n\n")
+main4()
+print("\n\n\n\n\n\n")
+main4()
+print("\n\n\n\n\n\n")
