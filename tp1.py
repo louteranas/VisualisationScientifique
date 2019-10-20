@@ -2,6 +2,7 @@
 
 from polygone import Polygone
 import numpy as np
+import random as rd
 import matplotlib.pyplot as plt
 import sys
 import math
@@ -29,21 +30,37 @@ def getError(pointsA, pointsB):
         Sum += distanceInBetween(pointsA[i], pointsB[i])
     return math.sqrt(Sum)
 
+def main4():
+    startPoints = parsingInput()
+    polygone1 = Polygone(startPoints)
+    polygone2 = Polygone(startPoints)
+    polygone2.decompositionTotale(0)
+    for i in range(20):
+        polygone2.points[rd.randrange(0, len(polygone2.points))] += np.array([rd.randrange(0, 5),rd.randrange(0, 5)])
+    polygone2.recompositionTotale()
+    #polygone1.draw(len(polygone1.points))
+    input('deformed polygone')
+    polygone2.draw(len(polygone2.points))
 
 def main3():
     startPoints = parsingInput()
     errors = []
     indexes = []
+    expo = []
     for i in range(500):
         polygone1 = Polygone(startPoints)
         polygone2 = Polygone(startPoints)
         polygone2.decompositionTotale(i/100)
         polygone2.recompositionTotale()
         errors.append(getError(polygone1.points, polygone2.points))
+        print(i/100)
+        print(errors[-1])
         indexes.append(i/100)
-    plt.plot(errors, indexes)
+    plt.plot(indexes, errors)
+    plt.xlabel("Seuil")
+    plt.ylabel("Erreur")
     plt.show()
-        
+
 
 def main1():
     polygone = Polygone(parsingInput())
@@ -66,7 +83,7 @@ def maintest():
     polygone.draw(len(polygone.points))
 
 def main2():
-    ## On parse l'input et on  crée un polygone correspondant 
+    ## On parse l'input et on  crée un polygone correspondant
     polygone = Polygone(parsingInput())
 
     input("Affichage avant traitement (Appuyer sur entree)")
@@ -74,7 +91,7 @@ def main2():
     polygone.draw(len(polygone.points))
     seuil = float(input("Quel seuil (float) ?   "))
     polygone.decompositionTotale(seuil)
-    
+
     input("Affichage après décomposition et recomposition (Appuyer sur entree)")
     polygone.recompositionTotale()
     polygone.draw(len(polygone.points))
@@ -82,4 +99,4 @@ def main2():
 if len(sys.argv) < 2:
     exit("Veuillez saisir un nom de fichier .d")
 
-main3()
+main4()
