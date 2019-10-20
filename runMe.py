@@ -72,17 +72,16 @@ def main3():
 
 def main1():
     polygone = Polygone(parsingInput())
-    print("############## Décomposition puis reconposition sans Seuil ###################")
+    print("############## Décomposition puis recomposition sans Seuil ###################")
     print("\n")
     print("=============> Image initial")
-    input("Veuillez fermer la fênetre puis appuyez sur Enter pour continuer...")
+    input("appuyez sur enter pour continuer....")
     polygone.draw(len(polygone.points))
-    input()
     print("=============> Traitement en cours...")
     polygone.decompositionTotale(0)
     polygone.recompositionTotale()
     print("=============> Image finale")
-    input("Veuillez fermer la fênetre puis appuyez sur Enter pour continuer...")
+    input("appuyez sur enter pour continuer....")
     polygone.draw(len(polygone.points))
 
 
@@ -99,18 +98,18 @@ def maintest():
 def main2():
     ## On parse l'input et on  crée un polygone correspondant
     polygone = Polygone(parsingInput())
-    print("############## Décomposition puis reconposition sans Seuil ###################")
+    print("############## Décomposition puis recomposition sans Seuil ###################")
     print("\n")
-    print("=============> Image initial")
+    print("=============> Image initiale")
+    input("appuyez sur enter pour continuer....")
     ## On affiche le polygone avant la décomposition
-    input("Veuillez fermer la fênetre puis appuyez sur Enter pour continuer...")
     polygone.draw(len(polygone.points))
     seuil = float(input("Veuilez entrer une valeur pour le seuil (float) ?   "))
     print("=============> Traitement en cours...")
     polygone.decompositionTotale(seuil)
     polygone.recompositionTotale()
     print("=============> Image finale")
-    input("Veuillez fermer la fênetre puis appuyez sur Enter pour continuer...")
+    input("appuyez sur enter pour continuer....")
     polygone.draw(len(polygone.points))
 
 if len(sys.argv) < 2:
