@@ -34,7 +34,7 @@ def RequetePrevisionPourUnDeltaEnHeure( NomPackage, DeltaEnHeure):
 	DateDuRun = DateDuPlusRecentRun();
 
 	# INSTANT PRESENT
-	InstantPresent=datetime.datetime.utcnow() 
+	InstantPresent=datetime.datetime.utcnow()
 	# HEURE CORRESPONDANTE (ON MET LES MINUTES ET SECONDES A ZERO)
 	InstantChoisi=datetime.datetime( InstantPresent.year, InstantPresent.month, InstantPresent.day, InstantPresent.hour, 0, 0, 0)
 
@@ -64,29 +64,6 @@ def RequetePrevisionPourUnDeltaEnHeure( NomPackage, DeltaEnHeure):
 
 	Package =  NomPackage
 
-#	Package = "SP1" # 30 Mo
-# SP1 - Paramètres courants à la surface : P(mer), U(10m), V(10m), DD(10m), FF(10m), FF_RAF(10m), U_RAF(10m), V_RAF (10m), T(2m), HU (2m), NEBUL, PRECIP, NEIGE, FLSOLAIRE_D , GRAUPEL
-#	Package = "SP2" # 25 Mo
-# SP2 - Paramètres additionnels à la surface : ALTITUDE, P(sol), T(sol), NEBBAS, NEBHAU, NEBMOY, NEBCON, CAPE_INS, H_COULIM, EAU, TMIN(2m) , TMAX(2m), TD(2m), Q(2m)
-#	Package = "SP3" # 35 Mo
-# SP3 - Paramètres additionnels (2) à la surface : COLONNE_VAPO, , FLEVAP , FLLAT, FLSEN, FLTHERM_D, FLSOLAIRE, FLTHERM, FLRASOL_CC, FLRATHE_CC, USTR, VSTR
-#	Package = "IP1" # 210 Mo
-# IP1 - Paramètres courants en niveaux isobares : T, HU, U, V, Z sur 15 niveaux (100 à 1000 hPa)
-#	Package = "IP2" # 20 Mo
-# IP2 - Paramètres additionnels en niveaux isobares : CLD_WATER, CLD_RAIN, CLD_SNOW, CIWC, CLD_FRACT sur 15 niveaux (100 à 1000 hPa)
-#	Package = "IP3" # 315 Mo
-# IP3 - Paramètres additionnels (2) en niveaux isobares : TD, Q, DD, FF, VV, VV2, TP sur 15 niveaux (100 à 1000 hPa)
-#	Package = "IP4" # 15 Mo
-# IP4 - Paramètres additionnels (3) en niveaux isobares : TKE sur 10 niveaux (400 à 1000 hPa); RFLCTVT sur 5 niveaux (700 à 925 hPa)
-#	Package = "IP5" # 15 Mo
-# IP5 - Paramètres additionnels (4) en niveaux isobares : TA, TB sur 5 niveaux (300 à 850 hPa); TPW sur 13 niveaux (200 à 1000 hPa); U, V, Z aux Niveaux ISO_TP 2000 et 1500
-#	Package = "HP1" # 470 Mo
-# HP1 - Paramètres courants en niveaux hauteur : T, HU, U, V, DD, FF, P sur 24 niveaux (20 à 3000m)
-#	Package = "HP2" # 225 Mo
-# HP2 - Paramètres additionnels en niveaux hauteur : Z, TKE, CLD_WATER, CLD_RAIN, CLD_SNOW, CLD_FRACT, CIWC, TD, Q sur 24 niveaux (20 à 3000m)
-#	Package = "HP3" # 5 Mo
-# HP3 - Paramètres additionnels (2) en niveaux hauteur : RFLCTVT sur 7 niveaux (500, 750, 1000, 1500, 2000, 2500 et 3000m)
-
 
 	# BaseRequete = "http://dcpc-nwp.meteo.fr/services/PS_GetCache_DCPCPreviNum?token=__5yLVTdr-sGeHoPitnFc7TZ6MhBcJxuSsoZp6y0leVHU__&model=AROME&grid=0.01&format=grib2"
 	BaseRequete = "http://dcpc-nwp.meteo.fr/services/PS_GetCache_DCPCPreviNum?token=__5yLVTdr-sGeHoPitnFc7TZ6MhBcJxuSsoZp6y0leVHU__&model=AROME&grid=0.025&grid2=0.025&format=grib2"
@@ -98,7 +75,7 @@ def RequetePrevisionPourUnDeltaEnHeure( NomPackage, DeltaEnHeure):
 
 # CODE POUR SAUVER LES DONNEES RETOURNEES PAR LA REQUETE VERS UN FICHIER BINAIRE
 def SauveLeFichierDUneRequeteMeteoFrance( Requete, NomDuFichier):
-	
+
 	try:
 		RawData = requests.get( Requete, stream=True)
 		RawData.raise_for_status()
@@ -146,7 +123,7 @@ if __name__ == "__main__":
 
 	sys.stderr.write(Requete)
 	sys.stderr.write("\n")
-	
+
 	print(NomDuFichier)
 
 	if os.path.isfile("./DATA/" + NomDuFichier):

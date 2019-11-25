@@ -34,7 +34,7 @@ def RequetePrevisionPourUnDeltaEnHeure( NomPackage, DeltaEnHeure):
 	DateDuRun = DateDuPlusRecentRun();
 
 	# INSTANT PRESENT
-	InstantPresent=datetime.datetime.utcnow() 
+	InstantPresent=datetime.datetime.utcnow()
 	# HEURE CORRESPONDANTE (ON MET LES MINUTES ET SECONDES A ZERO)
 	InstantChoisi=datetime.datetime( InstantPresent.year, InstantPresent.month, InstantPresent.day, InstantPresent.hour, 0, 0, 0)
 
@@ -54,15 +54,6 @@ def RequetePrevisionPourUnDeltaEnHeure( NomPackage, DeltaEnHeure):
 
 	Package = NomPackage
 
-#	Package = "SP1" # 40 Mo
-# SP1 : U(10m), V(10m), U_RAF(10m), V_RAF (10m), T(2m), HU (2m)
-#	Package = "SP2" # 62 Mo
-# SP2 : EAU, NEIGE, GRAUPEL, P(sol), NEBBAS, NEBHAU, NEBMOY, CAPE_INS, RFLCTVT_MAX (sol)
-#	Package = "SP3" # 14 Mo
-# SP3 : ALTITUDE(champ constant), TERRE_MER (champ constant), BT (niveaux canaux 108)
-#	Package = "HP1" # 62 Mo
-# HP1 : HU, U, V ur 4 niveaux (20, 50 et 100 m)
-
 
 #	BaseRequete = "http://dcpc-nwp.meteo.fr/services/PS_GetCache_DCPCPreviNum?token=__5yLVTdr-sGeHoPitnFc7TZ6MhBcJxuSsoZp6y0leVHU__&model=AROME&grid=0.01&format=grib2"
 	BaseRequete = "http://dcpc-nwp.meteo.fr/services/PS_GetCache_DCPCPreviNum?token=__5yLVTdr-sGeHoPitnFc7TZ6MhBcJxuSsoZp6y0leVHU__&model=AROME&grid=0.01&grid2=0.01&format=grib2"
@@ -73,7 +64,7 @@ def RequetePrevisionPourUnDeltaEnHeure( NomPackage, DeltaEnHeure):
 
 # CODE POUR SAUVER LES DONNEES RETOURNEES PAR LA REQUETE VERS UN FICHIER BINAIRE
 def SauveLeFichierDUneRequeteMeteoFrance( Requete, NomDuFichier):
-	
+
 	try:
 		RawData = requests.get( Requete, stream=True)
 		RawData.raise_for_status()
@@ -116,7 +107,7 @@ if __name__ == "__main__":
 		sys.exit(1)
 
 	[DateDuRun, IntervalleEnHeure, DateDeLaPrevision, Requete] = RequetePrevisionPourUnDeltaEnHeure( sys.argv[2], int(sys.argv[1]))
-	
+
 	NomDuFichier="AromeHD_" + sys.argv[2] + "_DateRun_"+ DateDuRun.isoformat() + "_DatePrev_"+ DateDeLaPrevision.isoformat() + ".grib2"
 
 	print(NomDuFichier)
@@ -134,5 +125,3 @@ if __name__ == "__main__":
 			sys.exit(1);
 
 #========================== fin de main ============================
-
-
