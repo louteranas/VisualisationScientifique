@@ -1,8 +1,13 @@
-# state file generated using paraview version 4.4.0
+# state file generated using paraview version 5.7.0
 
 # ----------------------------------------------------------------
 # setup views used in the visualization
 # ----------------------------------------------------------------
+
+# trace generated using paraview version 5.7.0
+#
+# To ensure correct image size when batch processing, please search 
+# for and uncomment the line `# renderView*.ViewSize = [*,*]`
 
 #### import the simple module from the paraview
 from paraview.simple import *
@@ -11,177 +16,196 @@ paraview.simple._DisableFirstRenderCameraReset()
 
 # Create a new 'Render View'
 renderView1 = CreateView('RenderView')
-renderView1.ViewSize = [1096, 772]
+renderView1.ViewSize = [1559, 1166]
 renderView1.InteractionMode = '2D'
 renderView1.AxesGrid = 'GridAxes3DActor'
 renderView1.CenterOfRotation = [1.99999999999091, 45.5, 0.0]
-renderView1.StereoType = 0
-renderView1.CameraPosition = [2.309656359288365, 44.526794299350854, 10000.0]
-renderView1.CameraFocalPoint = [2.309656359288365, 44.526794299350854, 0.0]
-renderView1.CameraParallelScale = 8.53766819205841
+renderView1.StereoType = 'Crystal Eyes'
+renderView1.CameraPosition = [1.9848502385286462, 45.4919636394582, 10000.0]
+renderView1.CameraFocalPoint = [1.9848502385286462, 45.4919636394582, 0.0]
+renderView1.CameraParallelScale = 9.039412339208
 renderView1.Background = [0.32, 0.34, 0.43]
+renderView1.BackEnd = 'OSPRay raycaster'
+
+SetActiveView(None)
+
+# ----------------------------------------------------------------
+# setup view layouts
+# ----------------------------------------------------------------
+
+# create new layout object 'Layout #1'
+layout1 = CreateLayout(name='Layout #1')
+layout1.AssignView(0, renderView1)
+
+# ----------------------------------------------------------------
+# restore active view
+SetActiveView(renderView1)
+# ----------------------------------------------------------------
 
 # ----------------------------------------------------------------
 # setup the data processing pipelines
 # ----------------------------------------------------------------
 
 # create a new 'NetCDF Reader'
-dataSP1nc = NetCDFReader(FileName=['/user/0/.base/loutera/home/Documents/3a/VisualisationScientifique/Projet/Demo/dataSP1.nc'])
+dataSP1nc = NetCDFReader(FileName=['/home/ananas/Documents/ProjetImag/3A/VisualisationScientifique/Projet/Demo/dataSP1.nc'])
 dataSP1nc.Dimensions = '(latitude, longitude)'
 dataSP1nc.SphericalCoordinates = 0
 dataSP1nc.ReplaceFillValueWithNan = 1
 
 # create a new 'Calculator'
-calcwindSpeed = Calculator(Input=dataSP1nc)
-calcwindSpeed.ResultArrayName = 'WindSpeed'
-calcwindSpeed.Function = 'UGRD_10maboveground*iHat+VGRD_10maboveground*jHat'
+calcWindspeed = Calculator(Input=dataSP1nc)
+calcWindspeed.ResultArrayName = 'Calc :  Wind speed'
+calcWindspeed.Function = 'sqrt((UGRD_10maboveground)^2+(VGRD_10maboveground)^2)'
+
+# create a new 'Calculator'
+calcwindVectors = Calculator(Input=dataSP1nc)
+calcwindVectors.ResultArrayName = 'WindSpeed'
+calcwindVectors.Function = 'UGRD_10maboveground*iHat+VGRD_10maboveground*jHat'
 
 # create a new 'Extract Subset'
-extractSubset3030 = ExtractSubset(Input=calcwindSpeed)
+extractSubset1 = ExtractSubset(Input=calcWindspeed)
+extractSubset1.VOI = [0, 800, 0, 600, 0, 0]
+extractSubset1.SampleRateI = 10
+extractSubset1.SampleRateJ = 10
+
+# create a new 'Threshold'
+threshold1 = Threshold(Input=extractSubset1)
+threshold1.Scalars = ['POINTS', 'Calc :  Wind speed']
+threshold1.ThresholdRange = [3.5, 18.96972868347375]
+
+# create a new 'Calculator'
+calcTempsCelcius = Calculator(Input=dataSP1nc)
+calcTempsCelcius.ResultArrayName = 'TempsCelc'
+calcTempsCelcius.Function = 'TMP_2maboveground - 273.15'
+
+# create a new 'Contour'
+contourRafal1 = Contour(Input=threshold1)
+contourRafal1.ContourBy = ['POINTS', 'Calc :  Wind speed']
+contourRafal1.Isosurfaces = [1.0360908187394047, 1.427283329492765, 1.9661767731196633, 2.7085379779003773, 3.7311894220419517, 5.139959128042107, 7.080632165676826, 9.754037068523276, 13.436828366162102, 18.5101158908178]
+contourRafal1.PointMergeMethod = 'Uniform Binning'
+
+# create a new 'Extract Subset'
+extractSubset3030 = ExtractSubset(Input=calcwindVectors)
 extractSubset3030.VOI = [0, 800, 0, 600, 0, 0]
 extractSubset3030.SampleRateI = 30
 extractSubset3030.SampleRateJ = 30
 
-# create a new 'Stream Tracer'
-streamTracer1 = StreamTracer(Input=extractSubset3030,
-    SeedType='High Resolution Line Source')
-streamTracer1.Vectors = ['POINTS', 'WindSpeed']
-streamTracer1.IntegrationStepUnit = 'Length'
-streamTracer1.MaximumStreamlineLength = 4.679999999995744
-
-# init the 'High Resolution Line Source' selected for 'SeedType'
-streamTracer1.SeedType.Point1 = [-7.9557633772430005, 46.736732994464994, -2.2737367544323206e-13]
-streamTracer1.SeedType.Point2 = [-1.9036966953216186, 53.00000000000132, -2.2737367544323206e-13]
-streamTracer1.SeedType.Resolution = 20
-
-# create a new 'Stream Tracer'
-streamTracer3 = StreamTracer(Input=extractSubset3030,
-    SeedType='High Resolution Line Source')
-streamTracer3.Vectors = ['POINTS', 'WindSpeed']
-streamTracer3.IntegrationStepUnit = 'Length'
-streamTracer3.MaximumStreamlineLength = 4.68
-
-# init the 'High Resolution Line Source' selected for 'SeedType'
-streamTracer3.SeedType.Point1 = [11.994953486064187, 49.05915568919555, -6.536993168992922e-13]
-streamTracer3.SeedType.Point2 = [7.872596933926368, 53.02211831137895, -6.536993168992922e-13]
-streamTracer3.SeedType.Resolution = 20
-
-# create a new 'Stream Tracer'
-streamTracer2 = StreamTracer(Input=extractSubset3030,
-    SeedType='High Resolution Line Source')
-streamTracer2.Vectors = ['POINTS', 'WindSpeed']
-streamTracer2.IntegrationStepUnit = 'Length'
-streamTracer2.MaximumStreamlineLength = 4.68
-
-# init the 'High Resolution Line Source' selected for 'SeedType'
-streamTracer2.SeedType.Point1 = [-3.2887996764029666, 37.91152675448726, -8.242295734817162e-13]
-streamTracer2.SeedType.Point2 = [-7.919877390243858, 41.67542457426466, 0.0]
-streamTracer2.SeedType.Resolution = 20
-
-# create a new 'Stream Tracer'
-streamTracer5 = StreamTracer(Input=extractSubset3030,
-    SeedType='High Resolution Line Source')
-streamTracer5.Vectors = ['POINTS', 'WindSpeed']
-streamTracer5.IntegrationStepUnit = 'Length'
-streamTracer5.MaximumStreamlineLength = 4.68
-
-# init the 'High Resolution Line Source' selected for 'SeedType'
-streamTracer5.SeedType.Point1 = [0.9136794854910424, 49.65635009641183, -4.547473508864641e-13]
-streamTracer5.SeedType.Point2 = [4.200957245113677, 52.29221403589218, -4.547473508864641e-13]
-streamTracer5.SeedType.Resolution = 20
-
-# create a new 'Glyph'
-glyphWindVectors = Glyph(Input=extractSubset3030,
+# create a new 'GlyphLegacy'
+glyphWindVectors = GlyphLegacy(Input=extractSubset3030,
     GlyphType='2D Glyph')
 glyphWindVectors.Scalars = ['POINTS', 'DSWRF_surface']
 glyphWindVectors.Vectors = ['POINTS', 'WindSpeed']
 glyphWindVectors.ScaleFactor = 0.359999999999673
 glyphWindVectors.GlyphTransform = 'Transform2'
 
-# create a new 'Stream Tracer'
-streamTracer4 = StreamTracer(Input=extractSubset3030,
-    SeedType='High Resolution Line Source')
-streamTracer4.Vectors = ['POINTS', 'WindSpeed']
-streamTracer4.IntegrationStepUnit = 'Length'
-streamTracer4.MaximumStreamlineLength = 4.68
+# ----------------------------------------------------------------
+# setup the visualization in view 'renderView1'
+# ----------------------------------------------------------------
 
-# init the 'High Resolution Line Source' selected for 'SeedType'
-streamTracer4.SeedType.Point1 = [12.083426731577848, 43.330513042193076, -2.1458390619955026e-12]
-streamTracer4.SeedType.Point2 = [6.94362785603402, 38.003784885452596, -9.947598300641403e-13]
-streamTracer4.SeedType.Resolution = 20
+# show data from glyphWindVectors
+glyphWindVectorsDisplay = Show(glyphWindVectors, renderView1)
+
+# trace defaults for the display properties.
+glyphWindVectorsDisplay.Representation = 'Surface'
+glyphWindVectorsDisplay.AmbientColor = [0.9372549019607843, 0.9372549019607843, 0.9372549019607843]
+glyphWindVectorsDisplay.ColorArrayName = ['POINTS', '']
+glyphWindVectorsDisplay.DiffuseColor = [0.9372549019607843, 0.9372549019607843, 0.9372549019607843]
+glyphWindVectorsDisplay.Opacity = 0.49
+glyphWindVectorsDisplay.OSPRayScaleFunction = 'PiecewiseFunction'
+glyphWindVectorsDisplay.ScaleFactor = 2.03443508148193
+glyphWindVectorsDisplay.GlyphType = 'Arrow'
+glyphWindVectorsDisplay.SetScaleArray = [None, '']
+glyphWindVectorsDisplay.ScaleTransferFunction = 'PiecewiseFunction'
+glyphWindVectorsDisplay.OpacityArray = [None, '']
+glyphWindVectorsDisplay.OpacityTransferFunction = 'PiecewiseFunction'
+glyphWindVectorsDisplay.DataAxesGrid = 'GridAxesRepresentation'
+glyphWindVectorsDisplay.PolarAxes = 'PolarAxesRepresentation'
+
+# show data from contourRafal1
+contourRafal1Display = Show(contourRafal1, renderView1)
+
+# get color transfer function/color map for 'CalcWindspeed'
+calcWindspeedLUT = GetColorTransferFunction('CalcWindspeed')
+calcWindspeedLUT.RGBPoints = [1.427283329492765, 0.34902, 0.0, 0.129412, 1.521712706071941, 0.4, 0.00392157, 0.101961, 1.622389550814499, 0.470588, 0.0156863, 0.0901961, 1.7297271975776178, 0.54902, 0.027451, 0.0705882, 1.8441663264766763, 0.619608, 0.0627451, 0.0431373, 1.9661767731196633, 0.690196, 0.12549, 0.0627451, 2.0962594575409326, 0.741176, 0.184314, 0.0745098, 2.234948440753635, 0.788235, 0.266667, 0.0941176, 2.3828131173641083, 0.811765, 0.345098, 0.113725, 2.5404605532501146, 0.831373, 0.411765, 0.133333, 2.7085379779003773, 0.85098, 0.47451, 0.145098, 2.8877354416478522, 0.870588, 0.54902, 0.156863, 3.0787886487061225, 0.878431, 0.619608, 0.168627, 3.282481977640107, 0.890196, 0.658824, 0.196078, 3.4996517016717688, 0.909804, 0.717647, 0.235294, 3.731189422041951, 0.929412, 0.776471, 0.278431, 3.9326582682660027, 0.94902, 0.823529, 0.321569, 4.175506130704372, 0.968627, 0.87451, 0.407843, 4.456015682207316, 0.980392, 0.917647, 0.509804, 4.7614422270840695, 0.988235, 0.956863, 0.643137, 4.928197348356701, 0.992157, 0.964706, 0.713725, 5.1268046156572, 0.988235, 0.980392, 0.870588, 5.139959128042105, 1.0, 1.0, 1.0, 5.153147392677985, 0.913725, 0.988235, 0.937255, 5.360820188492004, 0.827451, 0.980392, 0.886275, 5.5698212428248794, 0.764706, 0.980392, 0.866667, 5.794360313146933, 0.658824, 0.980392, 0.843137, 6.058769171405769, 0.572549, 0.964706, 0.835294, 6.43290774178609, 0.423529, 0.941176, 0.87451, 6.743627402588857, 0.262745, 0.901961, 0.862745, 7.169200170245875, 0.0705882, 0.854902, 0.870588, 7.582843002737545, 0.0509804, 0.8, 0.85098, 8.185650743955334, 0.0235294, 0.709804, 0.831373, 8.870228393702163, 0.0313725, 0.615686, 0.811765, 9.754037068523276, 0.0313725, 0.537255, 0.788235, 10.399366289763577, 0.0392157, 0.466667, 0.768627, 11.087390633122133, 0.0509804, 0.396078, 0.741176, 11.820934817196363, 0.054902, 0.317647, 0.709804, 12.603010444582566, 0.054902, 0.243137, 0.678431, 13.436828366162109, 0.0431373, 0.164706, 0.639216, 14.325811863411383, 0.0313725, 0.0980392, 0.6, 15.273610702856438, 0.0392157, 0.0392157, 0.560784, 16.284116120373167, 0.105882, 0.0509804, 0.509804, 17.361476796852315, 0.113725, 0.0235294, 0.45098, 18.5101158908178, 0.12549, 0.0, 0.380392]
+calcWindspeedLUT.UseLogScale = 1
+calcWindspeedLUT.ColorSpace = 'Lab'
+calcWindspeedLUT.NanColor = [0.250004, 0.0, 0.0]
+calcWindspeedLUT.ScalarRangeInitialized = 1.0
+
+# trace defaults for the display properties.
+contourRafal1Display.Representation = 'Surface'
+contourRafal1Display.ColorArrayName = ['POINTS', 'Calc :  Wind speed']
+contourRafal1Display.LookupTable = calcWindspeedLUT
+contourRafal1Display.Opacity = 0.77
+contourRafal1Display.OSPRayScaleFunction = 'PiecewiseFunction'
+contourRafal1Display.SelectOrientationVectors = 'None'
+contourRafal1Display.ScaleFactor = -2.0000000000000002e+298
+contourRafal1Display.SelectScaleArray = 'None'
+contourRafal1Display.GlyphType = 'Arrow'
+contourRafal1Display.GlyphTableIndexArray = 'None'
+contourRafal1Display.GaussianRadius = -1e+297
+contourRafal1Display.SetScaleArray = [None, '']
+contourRafal1Display.ScaleTransferFunction = 'PiecewiseFunction'
+contourRafal1Display.OpacityArray = [None, '']
+contourRafal1Display.OpacityTransferFunction = 'PiecewiseFunction'
+contourRafal1Display.DataAxesGrid = 'GridAxesRepresentation'
+contourRafal1Display.PolarAxes = 'PolarAxesRepresentation'
+
+# show data from calcTempsCelcius
+calcTempsCelciusDisplay = Show(calcTempsCelcius, renderView1)
+
+# get color transfer function/color map for 'TempsCelc'
+tempsCelcLUT = GetColorTransferFunction('TempsCelc')
+tempsCelcLUT.AutomaticRescaleRangeMode = 'Never'
+tempsCelcLUT.EnableOpacityMapping = 1
+tempsCelcLUT.RGBPoints = [0.0019881738281250024, 0.0862745098039216, 0.00392156862745098, 0.298039215686275, 0.6050249959112263, 0.113725, 0.0235294, 0.45098, 1.1058509518382205, 0.105882, 0.0509804, 0.509804, 1.4533635274700516, 0.0392157, 0.0392157, 0.560784, 1.7906555210082233, 0.0313725, 0.0980392, 0.6, 2.1177257702303653, 0.0431373, 0.164706, 0.639216, 2.58788881765389, 0.054902, 0.243137, 0.678431, 3.2113675698169533, 0.054902, 0.317647, 0.709804, 3.9779381953124737, 0.0509804, 0.396078, 0.741176, 4.474931947998025, 0.0392157, 0.466667, 0.768627, 4.971925700683576, 0.0313725, 0.537255, 0.788235, 5.49063989450054, 0.0313725, 0.615686, 0.811765, 6.022128758930943, 0.0235294, 0.709804, 0.831373, 6.553618785583658, 0.0509804, 0.8, 0.85098, 6.993118924503713, 0.0705882, 0.854902, 0.870588, 7.401957317142483, 0.262745, 0.901961, 0.862745, 7.759690474868096, 0.423529, 0.941176, 0.87451, 8.31162166570831, 0.572549, 0.964706, 0.835294, 8.67957656774989, 0.658824, 0.980392, 0.843137, 8.945320999965093, 0.764706, 0.980392, 0.866667, 9.231507177478951, 0.827451, 0.980392, 0.886275, 9.793659531523982, 0.913725, 0.988235, 0.937255, 9.967415819339926, 1.0, 1.0, 0.972549019607843, 10.141172107155874, 0.988235, 0.980392, 0.870588, 10.396695957277293, 0.992156862745098, 0.972549019607843, 0.803921568627451, 10.590893990391896, 0.992157, 0.964706, 0.713725, 10.91796423961404, 0.988235, 0.956863, 0.643137, 11.439232521950721, 0.980392, 0.917647, 0.509804, 11.878733823093025, 0.968627, 0.87451, 0.407843, 12.32845570632905, 0.94902, 0.823529, 0.321569, 12.655525955551177, 0.929412, 0.776471, 0.278431, 13.135910747290666, 0.909804, 0.717647, 0.235294, 13.565190304116975, 0.890196, 0.658824, 0.196078, 13.91781324902345, 0.878431, 0.619608, 0.168627, 14.414807001708995, 0.870588, 0.54902, 0.156863, 14.911800754394546, 0.85098, 0.47451, 0.145098, 15.408794507080092, 0.831373, 0.411765, 0.133333, 15.905788259765643, 0.811765, 0.345098, 0.113725, 16.40278201245119, 0.788235, 0.266667, 0.0941176, 16.899775765136738, 0.741176, 0.184314, 0.0745098, 17.396769517822285, 0.690196, 0.12549, 0.0627451, 17.893763270507833, 0.619608, 0.0627451, 0.0431373, 18.358816586154216, 0.54902, 0.027451, 0.0705882, 18.7676546337583, 0.470588, 0.0156863, 0.0901961, 19.227597407803348, 0.4, 0.00392157, 0.101961, 19.881738281250023, 0.188235294117647, 0.0, 0.0705882352941176]
+tempsCelcLUT.ColorSpace = 'Lab'
+tempsCelcLUT.ScalarRangeInitialized = 1.0
+
+# get opacity transfer function/opacity map for 'TempsCelc'
+tempsCelcPWF = GetOpacityTransferFunction('TempsCelc')
+tempsCelcPWF.Points = [0.0019881738281250024, 0.0, 0.5, 0.0, 19.881738281250023, 1.0, 0.5, 0.0]
+tempsCelcPWF.ScalarRangeInitialized = 1
+
+# trace defaults for the display properties.
+calcTempsCelciusDisplay.Representation = 'Slice'
+calcTempsCelciusDisplay.ColorArrayName = ['POINTS', 'TempsCelc']
+calcTempsCelciusDisplay.LookupTable = tempsCelcLUT
+calcTempsCelciusDisplay.OSPRayScaleArray = 'TempsCelc'
+calcTempsCelciusDisplay.OSPRayScaleFunction = 'PiecewiseFunction'
+calcTempsCelciusDisplay.SelectOrientationVectors = 'DSWRF_surface'
+calcTempsCelciusDisplay.ScaleFactor = 1.999999999998181
+calcTempsCelciusDisplay.SelectScaleArray = 'TempsCelc'
+calcTempsCelciusDisplay.GlyphType = 'Arrow'
+calcTempsCelciusDisplay.GlyphTableIndexArray = 'TempsCelc'
+calcTempsCelciusDisplay.GaussianRadius = 0.09999999999990905
+calcTempsCelciusDisplay.SetScaleArray = ['POINTS', 'TempsCelc']
+calcTempsCelciusDisplay.ScaleTransferFunction = 'PiecewiseFunction'
+calcTempsCelciusDisplay.OpacityArray = ['POINTS', 'TempsCelc']
+calcTempsCelciusDisplay.OpacityTransferFunction = 'PiecewiseFunction'
+calcTempsCelciusDisplay.DataAxesGrid = 'GridAxesRepresentation'
+calcTempsCelciusDisplay.PolarAxes = 'PolarAxesRepresentation'
+calcTempsCelciusDisplay.ScalarOpacityUnitDistance = 0.3192955968304612
+calcTempsCelciusDisplay.ScalarOpacityFunction = tempsCelcPWF
+calcTempsCelciusDisplay.IsosurfaceValues = [1.8348632812500227]
+
+# init the 'PiecewiseFunction' selected for 'ScaleTransferFunction'
+calcTempsCelciusDisplay.ScaleTransferFunction.Points = [-16.212011718749977, 0.0, 0.5, 0.0, 19.881738281250023, 1.0, 0.5, 0.0]
+
+# init the 'PiecewiseFunction' selected for 'OpacityTransferFunction'
+calcTempsCelciusDisplay.OpacityTransferFunction.Points = [-16.212011718749977, 0.0, 0.5, 0.0, 19.881738281250023, 1.0, 0.5, 0.0]
 
 # ----------------------------------------------------------------
 # setup color maps and opacity mapes used in the visualization
 # note: the Get..() functions create a new object, if needed
 # ----------------------------------------------------------------
 
-# get color transfer function/color map for 'TMP2maboveground'
-tMP2mabovegroundLUT = GetColorTransferFunction('TMP2maboveground')
-tMP2mabovegroundLUT.RGBPoints = [256.93798828125, 1.0, 0.988235, 0.968627, 257.65986328125, 1.0, 0.952941, 0.878431, 258.74267578125, 0.968627, 0.905882, 0.776471, 260.54736328125, 0.94902, 0.898039, 0.647059, 262.35205078125, 0.901961, 0.878431, 0.556863, 264.15673828125, 0.847059, 0.858824, 0.482353, 265.96142578125, 0.690196, 0.819608, 0.435294, 267.76611328125, 0.513725, 0.768627, 0.384314, 269.57080078125, 0.337255, 0.721569, 0.337255, 271.37548828125, 0.278431, 0.658824, 0.392157, 273.18017578125, 0.231373, 0.639216, 0.435294, 274.98486328125, 0.203922, 0.6, 0.486275, 276.78955078125, 0.172549, 0.568627, 0.537255, 278.59423828125, 0.141176, 0.517647, 0.54902, 280.39892578125, 0.133333, 0.458824, 0.541176, 282.20361328125, 0.12549, 0.396078, 0.529412, 284.00830078125, 0.117647, 0.321569, 0.521569, 285.81298828125, 0.121569, 0.258824, 0.509804, 287.61767578125, 0.133333, 0.227451, 0.501961, 289.42236328125, 0.145098, 0.192157, 0.490196, 291.22705078125, 0.188235, 0.164706, 0.470588, 293.03173828125, 0.258824, 0.196078, 0.439216]
-tMP2mabovegroundLUT.ColorSpace = 'Lab'
-tMP2mabovegroundLUT.NanColor = [0.25, 0.0, 0.0]
-tMP2mabovegroundLUT.ScalarRangeInitialized = 1.0
-
-# get opacity transfer function/opacity map for 'TMP2maboveground'
-tMP2mabovegroundPWF = GetOpacityTransferFunction('TMP2maboveground')
-tMP2mabovegroundPWF.Points = [256.93798828125, 0.0, 0.5, 0.0, 293.03173828125, 1.0, 0.5, 0.0]
-tMP2mabovegroundPWF.ScalarRangeInitialized = 1
+# get opacity transfer function/opacity map for 'CalcWindspeed'
+calcWindspeedPWF = GetOpacityTransferFunction('CalcWindspeed')
+calcWindspeedPWF.Points = [1.427283329492765, 0.0, 0.5, 0.0, 18.5101158908178, 1.0, 0.5, 0.0]
+calcWindspeedPWF.ScalarRangeInitialized = 1
 
 # ----------------------------------------------------------------
-# setup the visualization in view 'renderView1'
+# finally, restore active source
+SetActiveSource(glyphWindVectors)
 # ----------------------------------------------------------------
-
-# show data from calcwindSpeed
-calcwindSpeedDisplay = Show(calcwindSpeed, renderView1)
-# trace defaults for the display properties.
-calcwindSpeedDisplay.Representation = 'Slice'
-calcwindSpeedDisplay.ColorArrayName = ['POINTS', 'TMP_2maboveground']
-calcwindSpeedDisplay.LookupTable = tMP2mabovegroundLUT
-calcwindSpeedDisplay.ScalarOpacityUnitDistance = 0.319295596830461
-
-# show color legend
-calcwindSpeedDisplay.SetScalarBarVisibility(renderView1, True)
-
-# show data from glyphWindVectors
-glyphWindVectorsDisplay = Show(glyphWindVectors, renderView1)
-# trace defaults for the display properties.
-glyphWindVectorsDisplay.ColorArrayName = ['POINTS', '']
-glyphWindVectorsDisplay.DiffuseColor = [1.0, 0.6666666666666666, 0.0]
-
-# show data from streamTracer1
-streamTracer1Display = Show(streamTracer1, renderView1)
-# trace defaults for the display properties.
-streamTracer1Display.ColorArrayName = ['POINTS', '']
-streamTracer1Display.DiffuseColor = [1.0, 1.0, 0.4980392156862745]
-
-# show data from streamTracer2
-streamTracer2Display = Show(streamTracer2, renderView1)
-# trace defaults for the display properties.
-streamTracer2Display.ColorArrayName = ['POINTS', '']
-streamTracer2Display.DiffuseColor = [1.0, 1.0, 0.4980392156862745]
-
-# show data from streamTracer4
-streamTracer4Display = Show(streamTracer4, renderView1)
-# trace defaults for the display properties.
-streamTracer4Display.ColorArrayName = ['POINTS', '']
-streamTracer4Display.DiffuseColor = [1.0, 1.0, 0.4980392156862745]
-
-# show data from streamTracer3
-streamTracer3Display = Show(streamTracer3, renderView1)
-# trace defaults for the display properties.
-streamTracer3Display.ColorArrayName = ['POINTS', '']
-streamTracer3Display.DiffuseColor = [1.0, 1.0, 0.4980392156862745]
-
-# show data from streamTracer5
-streamTracer5Display = Show(streamTracer5, renderView1)
-# trace defaults for the display properties.
-streamTracer5Display.ColorArrayName = ['POINTS', '']
-streamTracer5Display.DiffuseColor = [1.0, 1.0, 0.4980392156862745]
-
-# setup the color legend parameters for each legend in this view
-
-# get color legend/bar for tMP2mabovegroundLUT in view renderView1
-tMP2mabovegroundLUTColorBar = GetScalarBar(tMP2mabovegroundLUT, renderView1)
-tMP2mabovegroundLUTColorBar.Position = [0.97, 0.108365758754864]
-tMP2mabovegroundLUTColorBar.Title = 'TMP_2maboveground'
-tMP2mabovegroundLUTColorBar.ComponentTitle = ''
