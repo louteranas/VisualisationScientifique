@@ -14,11 +14,11 @@ renderView1 = CreateView('RenderView')
 renderView1.ViewSize = [1096, 772]
 renderView1.InteractionMode = '2D'
 renderView1.AxesGrid = 'GridAxes3DActor'
-renderView1.CenterOfRotation = [1.999999999990905, 45.5, 0.0]
+renderView1.CenterOfRotation = [1.99999999999091, 45.5, 0.0]
 renderView1.StereoType = 0
-renderView1.CameraPosition = [1.999999999990905, 45.5, 10000.0]
-renderView1.CameraFocalPoint = [1.999999999990905, 45.5, 0.0]
-renderView1.CameraParallelScale = 7.055924125668108
+renderView1.CameraPosition = [2.309656359288365, 44.526794299350854, 10000.0]
+renderView1.CameraFocalPoint = [2.309656359288365, 44.526794299350854, 0.0]
+renderView1.CameraParallelScale = 8.53766819205841
 renderView1.Background = [0.32, 0.34, 0.43]
 
 # ----------------------------------------------------------------
@@ -32,56 +32,83 @@ dataSP1nc.SphericalCoordinates = 0
 dataSP1nc.ReplaceFillValueWithNan = 1
 
 # create a new 'Calculator'
-calculator1 = Calculator(Input=dataSP1nc)
-calculator1.ResultArrayName = 'WindSpeed'
-calculator1.Function = 'UGRD_10maboveground*iHat+VGRD_10maboveground*jHat'
+calcwindSpeed = Calculator(Input=dataSP1nc)
+calcwindSpeed.ResultArrayName = 'WindSpeed'
+calcwindSpeed.Function = 'UGRD_10maboveground*iHat+VGRD_10maboveground*jHat'
+
+# create a new 'Extract Subset'
+extractSubset3030 = ExtractSubset(Input=calcwindSpeed)
+extractSubset3030.VOI = [0, 800, 0, 600, 0, 0]
+extractSubset3030.SampleRateI = 30
+extractSubset3030.SampleRateJ = 30
 
 # create a new 'Stream Tracer'
-streamTracer2 = StreamTracer(Input=calculator1,
+streamTracer1 = StreamTracer(Input=extractSubset3030,
     SeedType='High Resolution Line Source')
-streamTracer2.Vectors = ['POINTS', 'WindSpeed']
-streamTracer2.MaximumStreamlineLength = 19.99999999998181
+streamTracer1.Vectors = ['POINTS', 'WindSpeed']
+streamTracer1.IntegrationStepUnit = 'Length'
+streamTracer1.MaximumStreamlineLength = 4.679999999995744
 
 # init the 'High Resolution Line Source' selected for 'SeedType'
-streamTracer2.SeedType.Point1 = [2.571446923301356, 38.776131546267436, 0.0]
-streamTracer2.SeedType.Point2 = [10.55478953451784, 38.73523744273476, 9.094947017729282e-13]
-streamTracer2.SeedType.Resolution = 10
+streamTracer1.SeedType.Point1 = [-7.9557633772430005, 46.736732994464994, -2.2737367544323206e-13]
+streamTracer1.SeedType.Point2 = [-1.9036966953216186, 53.00000000000132, -2.2737367544323206e-13]
+streamTracer1.SeedType.Resolution = 20
 
 # create a new 'Stream Tracer'
-streamTracer3 = StreamTracer(Input=calculator1,
+streamTracer3 = StreamTracer(Input=extractSubset3030,
     SeedType='High Resolution Line Source')
 streamTracer3.Vectors = ['POINTS', 'WindSpeed']
-streamTracer3.MaximumStreamlineLength = 19.99999999998181
+streamTracer3.IntegrationStepUnit = 'Length'
+streamTracer3.MaximumStreamlineLength = 4.68
 
 # init the 'High Resolution Line Source' selected for 'SeedType'
-streamTracer3.SeedType.Point1 = [7.0676572603004235, 46.430394381872674, 1.3216094885137863e-12]
-streamTracer3.SeedType.Point2 = [11.99999999998181, 53.0, 0.0]
+streamTracer3.SeedType.Point1 = [11.994953486064187, 49.05915568919555, -6.536993168992922e-13]
+streamTracer3.SeedType.Point2 = [7.872596933926368, 53.02211831137895, -6.536993168992922e-13]
 streamTracer3.SeedType.Resolution = 20
 
 # create a new 'Stream Tracer'
-streamTracer1 = StreamTracer(Input=calculator1,
+streamTracer2 = StreamTracer(Input=extractSubset3030,
     SeedType='High Resolution Line Source')
-streamTracer1.Vectors = ['POINTS', 'WindSpeed']
-streamTracer1.MaximumStreamlineLength = 19.99999999998181
+streamTracer2.Vectors = ['POINTS', 'WindSpeed']
+streamTracer2.IntegrationStepUnit = 'Length'
+streamTracer2.MaximumStreamlineLength = 4.68
 
 # init the 'High Resolution Line Source' selected for 'SeedType'
-streamTracer1.SeedType.Point1 = [-7.411210551107297, 45.57397336530166, 6.821210263296962e-13]
-streamTracer1.SeedType.Point2 = [-5.958078191246562, 50.40397379351833, 5.968558980384842e-13]
-streamTracer1.SeedType.Resolution = 10
+streamTracer2.SeedType.Point1 = [-3.2887996764029666, 37.91152675448726, -8.242295734817162e-13]
+streamTracer2.SeedType.Point2 = [-7.919877390243858, 41.67542457426466, 0.0]
+streamTracer2.SeedType.Resolution = 20
 
-# create a new 'Extract Subset'
-extractSubset1 = ExtractSubset(Input=calculator1)
-extractSubset1.VOI = [0, 800, 0, 600, 0, 0]
-extractSubset1.SampleRateI = 30
-extractSubset1.SampleRateJ = 30
+# create a new 'Stream Tracer'
+streamTracer5 = StreamTracer(Input=extractSubset3030,
+    SeedType='High Resolution Line Source')
+streamTracer5.Vectors = ['POINTS', 'WindSpeed']
+streamTracer5.IntegrationStepUnit = 'Length'
+streamTracer5.MaximumStreamlineLength = 4.68
+
+# init the 'High Resolution Line Source' selected for 'SeedType'
+streamTracer5.SeedType.Point1 = [0.9136794854910424, 49.65635009641183, -4.547473508864641e-13]
+streamTracer5.SeedType.Point2 = [4.200957245113677, 52.29221403589218, -4.547473508864641e-13]
+streamTracer5.SeedType.Resolution = 20
 
 # create a new 'Glyph'
-glyph1 = Glyph(Input=extractSubset1,
+glyphWindVectors = Glyph(Input=extractSubset3030,
     GlyphType='2D Glyph')
-glyph1.Scalars = ['POINTS', 'DSWRF_surface']
-glyph1.Vectors = ['POINTS', 'WindSpeed']
-glyph1.ScaleFactor = 0.3599999999996726
-glyph1.GlyphTransform = 'Transform2'
+glyphWindVectors.Scalars = ['POINTS', 'DSWRF_surface']
+glyphWindVectors.Vectors = ['POINTS', 'WindSpeed']
+glyphWindVectors.ScaleFactor = 0.359999999999673
+glyphWindVectors.GlyphTransform = 'Transform2'
+
+# create a new 'Stream Tracer'
+streamTracer4 = StreamTracer(Input=extractSubset3030,
+    SeedType='High Resolution Line Source')
+streamTracer4.Vectors = ['POINTS', 'WindSpeed']
+streamTracer4.IntegrationStepUnit = 'Length'
+streamTracer4.MaximumStreamlineLength = 4.68
+
+# init the 'High Resolution Line Source' selected for 'SeedType'
+streamTracer4.SeedType.Point1 = [12.083426731577848, 43.330513042193076, -2.1458390619955026e-12]
+streamTracer4.SeedType.Point2 = [6.94362785603402, 38.003784885452596, -9.947598300641403e-13]
+streamTracer4.SeedType.Resolution = 20
 
 # ----------------------------------------------------------------
 # setup color maps and opacity mapes used in the visualization
@@ -104,43 +131,57 @@ tMP2mabovegroundPWF.ScalarRangeInitialized = 1
 # setup the visualization in view 'renderView1'
 # ----------------------------------------------------------------
 
-# show data from calculator1
-calculator1Display = Show(calculator1, renderView1)
+# show data from calcwindSpeed
+calcwindSpeedDisplay = Show(calcwindSpeed, renderView1)
 # trace defaults for the display properties.
-calculator1Display.Representation = 'Slice'
-calculator1Display.ColorArrayName = ['POINTS', 'TMP_2maboveground']
-calculator1Display.LookupTable = tMP2mabovegroundLUT
-calculator1Display.ScalarOpacityUnitDistance = 0.3192955968304613
+calcwindSpeedDisplay.Representation = 'Slice'
+calcwindSpeedDisplay.ColorArrayName = ['POINTS', 'TMP_2maboveground']
+calcwindSpeedDisplay.LookupTable = tMP2mabovegroundLUT
+calcwindSpeedDisplay.ScalarOpacityUnitDistance = 0.319295596830461
 
 # show color legend
-calculator1Display.SetScalarBarVisibility(renderView1, True)
+calcwindSpeedDisplay.SetScalarBarVisibility(renderView1, True)
 
-# show data from glyph1
-glyph1Display = Show(glyph1, renderView1)
+# show data from glyphWindVectors
+glyphWindVectorsDisplay = Show(glyphWindVectors, renderView1)
 # trace defaults for the display properties.
-glyph1Display.ColorArrayName = ['POINTS', '']
-glyph1Display.DiffuseColor = [1.0, 1.0, 0.4980392156862745]
+glyphWindVectorsDisplay.ColorArrayName = ['POINTS', '']
+glyphWindVectorsDisplay.DiffuseColor = [1.0, 0.6666666666666666, 0.0]
 
 # show data from streamTracer1
 streamTracer1Display = Show(streamTracer1, renderView1)
 # trace defaults for the display properties.
 streamTracer1Display.ColorArrayName = ['POINTS', '']
+streamTracer1Display.DiffuseColor = [1.0, 1.0, 0.4980392156862745]
 
 # show data from streamTracer2
 streamTracer2Display = Show(streamTracer2, renderView1)
 # trace defaults for the display properties.
 streamTracer2Display.ColorArrayName = ['POINTS', '']
+streamTracer2Display.DiffuseColor = [1.0, 1.0, 0.4980392156862745]
+
+# show data from streamTracer4
+streamTracer4Display = Show(streamTracer4, renderView1)
+# trace defaults for the display properties.
+streamTracer4Display.ColorArrayName = ['POINTS', '']
+streamTracer4Display.DiffuseColor = [1.0, 1.0, 0.4980392156862745]
 
 # show data from streamTracer3
 streamTracer3Display = Show(streamTracer3, renderView1)
 # trace defaults for the display properties.
 streamTracer3Display.ColorArrayName = ['POINTS', '']
+streamTracer3Display.DiffuseColor = [1.0, 1.0, 0.4980392156862745]
+
+# show data from streamTracer5
+streamTracer5Display = Show(streamTracer5, renderView1)
+# trace defaults for the display properties.
+streamTracer5Display.ColorArrayName = ['POINTS', '']
+streamTracer5Display.DiffuseColor = [1.0, 1.0, 0.4980392156862745]
 
 # setup the color legend parameters for each legend in this view
 
 # get color legend/bar for tMP2mabovegroundLUT in view renderView1
 tMP2mabovegroundLUTColorBar = GetScalarBar(tMP2mabovegroundLUT, renderView1)
-tMP2mabovegroundLUTColorBar.Position = [0.8619786096256684, 0.0629701686121919]
-tMP2mabovegroundLUTColorBar.Position2 = [0.11999999999999988, 0.42999999999999994]
+tMP2mabovegroundLUTColorBar.Position = [0.97, 0.108365758754864]
 tMP2mabovegroundLUTColorBar.Title = 'TMP_2maboveground'
 tMP2mabovegroundLUTColorBar.ComponentTitle = ''
