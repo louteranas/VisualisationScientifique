@@ -18,11 +18,12 @@ if __name__ == "__main__":
             scriptArome = "RequeteArome.py"
             os.system("rm *.grib2")
             compteur = len([name for name in os.listdir('.') if os.path.isfile(name)])
-            while len([name for name in os.listdir('.') if os.path.isfile(name)]) < compteur + 1:
-                print(compteur)
-                os.system("python2 " + scriptArome + " " + str(heureFin) + " " + mode)
-                time.sleep(3)
-                compteur += 1
+            #while len([name for name in os.listdir('.') if os.path.isfile(name)]) < compteur + 1:
+            #    print(compteur)
+            os.system("python2 " + scriptArome + " " + str(heureFin) + " " + mode)
+            time.sleep(3)
+            compteur += 1
+            os.system("cat $(ls *.grib2) > donneesGroupees.grib2")
 
         elif isHD == 1:
             scriptArome = "RequeteAromeHD.py"
