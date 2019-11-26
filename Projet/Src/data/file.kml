@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <kml xmlns="http://www.opengis.net/kml/2.2">
+      <Folder>
+        <name>Ground Overlays</name>
+        <description>Examples of ground overlays</description>
+     <GroundOverlay>
+  <name>Large-scale overlay on terrain</name>
+  <description>Overlay shows Mount Etna erupting
+      on July 13th, 2001.</description>
+  <TimeSpan>
+      <begin>2019-11-27T02:00:00</begin>
+  </TimeSpan>
+  <Icon>
+    <href>./out0.png</href>
+  </Icon>
+  <LatLonBox>
+    <north>53.4</north>
+    <south>38</south>
+    <east>12</east>
+    <west>-8</west>
+    <rotation>0.01</rotation>
+  </LatLonBox>
+</GroundOverlay> <GroundOverlay>
+  <name>Large-scale overlay on terrain</name>
+  <description>Overlay shows Mount Etna erupting
+      on July 13th, 2001.</description>
+  <TimeSpan>
+      <begin>2019-11-27T03:00:00</begin>
+  </TimeSpan>
+  <Icon>
+    <href>./out1.png</href>
+  </Icon>
+  <LatLonBox>
+    <north>53.4</north>
+    <south>38</south>
+    <east>12</east>
+    <west>-8</west>
+    <rotation>0.01</rotation>
+  </LatLonBox>
+</GroundOverlay> <GroundOverlay>
+  <name>Large-scale overlay on terrain</name>
+  <description>Overlay shows Mount Etna erupting
+      on July 13th, 2001.</description>
+  <TimeSpan>
+      <begin>2019-11-27T04:00:00</begin>
+  </TimeSpan>
+  <Icon>
+    <href>./out2.png</href>
+  </Icon>
+  <LatLonBox>
+    <north>53.4</north>
+    <south>38</south>
+    <east>12</east>
+    <west>-8</west>
+    <rotation>0.01</rotation>
+  </LatLonBox>
+</GroundOverlay> <GroundOverlay>
+  <name>Large-scale overlay on terrain</name>
+  <description>Overlay shows Mount Etna erupting
+      on July 13th, 2001.</description>
+  <TimeSpan>
+      <begin>2019-11-27T05:00:00</begin>
+  </TimeSpan>
+  <Icon>
+    <href>./out3.png</href>
+  </Icon>
+  <LatLonBox>
+    <north>53.4</north>
+    <south>38</south>
+    <east>12</east>
+    <west>-8</west>
+    <rotation>0.01</rotation>
+  </LatLonBox>
+</GroundOverlay> <GroundOverlay>
+  <name>Large-scale overlay on terrain</name>
+  <description>Overlay shows Mount Etna erupting
+      on July 13th, 2001.</description>
+  <TimeSpan>
+      <begin>2019-11-27T06:00:00</begin>
+  </TimeSpan>
+  <Icon>
+    <href>./out4.png</href>
+  </Icon>
+  <LatLonBox>
+    <north>53.4</north>
+    <south>38</south>
+    <east>12</east>
+    <west>-8</west>
+    <rotation>0.01</rotation>
+  </LatLonBox>
+</GroundOverlay> <GroundOverlay>
+  <name>Large-scale overlay on terrain</name>
+  <description>Overlay shows Mount Etna erupting
+      on July 13th, 2001.</description>
+  <TimeSpan>
+      <begin>2019-11-27T07:00:00</begin>
+  </TimeSpan>
+  <Icon>
+    <href>./out5.png</href>
+  </Icon>
+  <LatLonBox>
+    <north>53.4</north>
+    <south>38</south>
+    <east>12</east>
+    <west>-8</west>
+    <rotation>0.01</rotation>
+  </LatLonBox>
+</GroundOverlay>
+      </Folder>
+    </kml>
+    
