@@ -24017,7 +24017,7 @@
     </Proxy>
     <Proxy group="sources" type="netCDFReader" id="13822" servers="1">
       <Property name="FileName" id="13822.FileName" number_of_elements="1">
-        <Element index="0" value="/home/ananas/Documents/ProjetImag/3A/VisualisationScientifique/Projet/Demo/dataSP1.nc"/>
+        <Element index="0" value="/user/0/loutera/Documents/3a/VisualisationScientifique/Projet/Src/data"/>
         <Domain name="files" id="13822.FileName.files"/>
       </Property>
       <Property name="TimestepValues" id="13822.TimestepValues" number_of_elements="6">
