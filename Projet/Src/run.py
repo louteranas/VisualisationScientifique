@@ -10,4 +10,4 @@ if __name__ == "__main__":
         sys.exit(1)
     else:
         os.system("cd data;./downloadData.py "+ (" ").join(sys.argv[1:]) + \
-        ";./wgrib2 donneesGroupees.grib2 -netcdf resultat.nc;pvpython vue.py;cd ..; eog out.png")
+        ";./wgrib2 donneesGroupees.grib2 -netcdf resultat.nc;pvpython vue.py;google-earth $(pwd)/file.kml;cd ..")
