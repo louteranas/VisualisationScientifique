@@ -1,3 +1,0 @@
-http://dcpc-nwp.meteo.fr/services/PS_GetCache_DCPCPreviNum?token=__5yLVTdr-sGeHoPitnFc7TZ6MhBcJxuSsoZp6y0leVHU__&model=AROME&grid=0.025&grid2=0.025&format=grib2&package=SP1&time=07H12H&referencetime=2019-11-19T03:00:00Z
-La requete vers le serveur meteo france a ete mal formee
-il y a eu un probleme lors du telechargement du fichier
