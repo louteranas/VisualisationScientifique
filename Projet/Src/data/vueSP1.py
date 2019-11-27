@@ -24,7 +24,7 @@ def writeoverlay(fichier, dt_object, i):
       <begin>""" + "T".join(str(dt_object).split(" ")) + """</begin>
   </TimeSpan>
   <Icon>
-    <href>./out""" + str(i) + """.png</href>
+    <href>./SP1out""" + str(i) + """.png</href>
   </Icon>
   <LatLonBox>
     <north>53.4</north>
@@ -70,7 +70,7 @@ renderView1.Background = [0.32, 0.34, 0.43]
 # ----------------------------------------------------------------
 
 # create a new 'NetCDF Reader'
-resultatnc = NetCDFReader(FileName=['resultat.nc'])
+resultatnc = NetCDFReader(FileName=['resultatSP1IP2.nc'])
 resultatnc.Dimensions = '(latitude, longitude)'
 resultatnc.SphericalCoordinates = 0
 resultatnc.ReplaceFillValueWithNan = 1
@@ -184,14 +184,14 @@ glyphwindvectorsDisplay.Opacity = 0.5
 
 tempsAnimation = resultatnc.TimestepValues
 
-mon_fichier = open("file.kml", "w")
+mon_fichier = open("fileSP1.kml", "w")
 mon_fichier.close()
-mon_fichier = open("file.kml", "a")
+mon_fichier = open("fileSP1.kml", "a")
 writeentete(mon_fichier)
 for i, t in enumerate(tempsAnimation):
     renderView1.ViewTime = t
     dt_object = datetime.fromtimestamp(int(t))
-    SaveScreenshot("out" + str(i) + ".png")
+    SaveScreenshot("SP1out" + str(i) + ".png")
     writeoverlay(mon_fichier, dt_object, i)
 writefooter(mon_fichier)
 

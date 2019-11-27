@@ -9,11 +9,11 @@ if __name__ == "__main__":
 # ARGUMENT 1 = NBRE D'HEURE A PARTIR DU MOMENT OU LA COMMANDE EST EXECUTEE
 # ARGUMENT 2 = NOM DU PACKAGE METEOFRANCE A TELECHARGER (SP1, SP2, SP3, HP1)
 
-    if (len(sys.argv) != 5):
-    	print("MAUVAIX NOMBRE D'ARGUMENTS. Format : 0^1 HeureDebut HeureFin Mode")
+    if (len(sys.argv) != 4):
+    	print("MAUVAIX NOMBRE D'ARGUMENTS. Format : 0^1 HeureDebut HeureFin")
     	sys.exit(1)
     else:
-        (nom, isHD, heureDebut, heureFin, mode) = (sys.argv[0], int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]), sys.argv[4])
+        (nom, isHD, heureDebut, heureFin) = (sys.argv[0], int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]))
         if isHD == 0:
             scriptArome = "RequeteArome.py"
             os.system("rm *.grib2")
@@ -24,12 +24,11 @@ if __name__ == "__main__":
             os.system("python2 " + scriptArome + " " + str(heureFin) + " " + "SP1")
             time.sleep(3)
             compteur += 1
-            os.system("cat $(ls *.grib2) > donneesSP1.grib2")
             print("###########  Telechargement du contenu IP2  ###########")
             os.system("python2 " + scriptArome + " " + str(heureFin) + " " + "IP2")
             time.sleep(3)
             compteur += 1
-            os.system("cat $(ls *.grib2) > donneesIP2.grib2")
+            os.system("cat $(ls *.grib2) > donneesSP1IP2.grib2")
         elif isHD == 1:
             ## check if donneesSP1.grib2 AND donneesIP2.grib2 exists and use them
         elif isHD == 2:
