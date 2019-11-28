@@ -6,7 +6,7 @@ import time
 
 if __name__ == "__main__":
     if (len(sys.argv) != 4):
-        print("MAUVAIX NOMBRE D'ARGUMENTS. Format : 0^1 HeureDebut HeureFin")
+        print("MAUVAIX NOMBRE D'ARGUMENTS. Format : 0^1 Heure Package")
         sys.exit(1)
     else:
         os.system("cd data;./downloadData.py "+ (" ").join(sys.argv[1:]) + \
