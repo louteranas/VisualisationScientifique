@@ -10,4 +10,4 @@ if __name__ == "__main__":
         sys.exit(1)
     else:
         os.system("cd data;./downloadData.py "+ (" ").join(sys.argv[1:]) + \
-        ";./wgrib2 donneesSP1IP2.grib2 -netcdf resultatSP1IP2.nc;pvpython vueSP1.py;;pvpython vueIP2.py;google-earth $(pwd)/fileSP1.kml;cd ..")
+        ";pvpython vue"+sys.argv[3]+".py;google-earth $(pwd)/file"+sys.argv[3]+".kml;cd ..")

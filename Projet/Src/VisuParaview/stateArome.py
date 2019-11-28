@@ -11,7 +11,7 @@ paraview.simple._DisableFirstRenderCameraReset()
 
 # Create a new 'Render View'
 renderView1 = CreateView('RenderView')
-renderView1.ViewSize = [1514, 1132]
+renderView1.ViewSize = [1032, 772]
 renderView1.InteractionMode = '2D'
 renderView1.AxesGrid = 'GridAxes3DActor'
 renderView1.OrientationAxesVisibility = 0
@@ -19,7 +19,7 @@ renderView1.CenterOfRotation = [1.99999999999091, 45.5, 0.0]
 renderView1.StereoType = 'Crystal Eyes'
 renderView1.CameraPosition = [1.98485023852865, 45.4919636394582, 10000.0]
 renderView1.CameraFocalPoint = [1.98485023852865, 45.4919636394582, 0.0]
-renderView1.CameraParallelScale = 7.470588710089256
+renderView1.CameraParallelScale = 7.470588710089259
 renderView1.Background = [0.32, 0.34, 0.43]
 
 # ----------------------------------------------------------------
@@ -27,25 +27,31 @@ renderView1.Background = [0.32, 0.34, 0.43]
 # ----------------------------------------------------------------
 
 # create a new 'NetCDF Reader'
-resultatnc = NetCDFReader(FileName=['/user/0/loutera/Documents/3a/VisualisationScientifique/Projet/Src/data/resultat.nc'])
-resultatnc.Dimensions = '(latitude, longitude)'
-resultatnc.SphericalCoordinates = 0
-resultatnc.ReplaceFillValueWithNan = 1
+resultatSPnc = NetCDFReader(FileName=['/user/0/.base/loutera/home/Documents/3a/VisualisationScientifique/Projet/Src/data/resultatSP1.nc'])
+resultatSPnc.Dimensions = '(latitude, longitude)'
+resultatSPnc.SphericalCoordinates = 0
+resultatSPnc.ReplaceFillValueWithNan = 1
 
 # create a new 'Calculator'
-calcWindspeed = Calculator(Input=resultatnc)
+calcWindspeed = Calculator(Input=resultatSPnc)
 calcWindspeed.ResultArrayName = 'Calc :  Wind speed'
 calcWindspeed.Function = 'sqrt((UGRD_10maboveground)^2+(VGRD_10maboveground)^2)'
 
 # create a new 'Calculator'
-calcTempsCelcius = Calculator(Input=resultatnc)
+calcTempsCelcius = Calculator(Input=resultatSPnc)
 calcTempsCelcius.ResultArrayName = 'TempsCelc'
 calcTempsCelcius.Function = 'TMP_2maboveground - 273.15'
 
 # create a new 'Calculator'
-calcwindVectors = Calculator(Input=resultatnc)
+calcwindVectors = Calculator(Input=resultatSPnc)
 calcwindVectors.ResultArrayName = 'WindSpeed'
 calcwindVectors.Function = 'UGRD_10maboveground*iHat+VGRD_10maboveground*jHat'
+
+# create a new 'Extract Subset'
+extractSubset3030 = ExtractSubset(Input=calcwindVectors)
+extractSubset3030.VOI = [0, 800, 0, 600, 0, 0]
+extractSubset3030.SampleRateI = 30
+extractSubset3030.SampleRateJ = 30
 
 # create a new 'Extract Subset'
 extractSubset1 = ExtractSubset(Input=calcWindspeed)
@@ -58,11 +64,13 @@ threshold1 = Threshold(Input=extractSubset1)
 threshold1.Scalars = ['POINTS', 'Calc :  Wind speed']
 threshold1.ThresholdRange = [3.5, 18.9697286834738]
 
-# create a new 'Extract Subset'
-extractSubset3030 = ExtractSubset(Input=calcwindVectors)
-extractSubset3030.VOI = [0, 800, 0, 600, 0, 0]
-extractSubset3030.SampleRateI = 30
-extractSubset3030.SampleRateJ = 30
+# create a new 'Contour'
+contourRafal1 = Contour(Input=threshold1)
+contourRafal1.ContourBy = ['POINTS', 'Calc :  Wind speed']
+contourRafal1.ComputeScalars = 1
+contourRafal1.OutputPointsPrecision = 'Same as input'
+contourRafal1.Isosurfaces = [1.0360908187394, 1.42728332949276, 1.96617677311966, 2.70853797790038, 3.73118942204195, 5.13995912804211, 7.08063216567683, 9.75403706852328, 13.4368283661621, 18.5101158908178]
+contourRafal1.PointMergeMethod = 'Uniform Binning'
 
 # create a new 'Glyph'
 glyphwindvectors = Glyph(Input=extractSubset3030,
@@ -72,18 +80,23 @@ glyphwindvectors.Vectors = [None, 'WindSpeed']
 glyphwindvectors.ScaleFactor = 0.35
 glyphwindvectors.GlyphTransform = 'Transform2'
 
-# create a new 'Contour'
-contourRafal1 = Contour(Input=threshold1)
-contourRafal1.ContourBy = ['POINTS', 'Calc :  Wind speed']
-contourRafal1.ComputeScalars = 1
-contourRafal1.OutputPointsPrecision = 'Same as input'
-contourRafal1.Isosurfaces = [1.0360908187394, 1.42728332949276, 1.96617677311966, 2.70853797790038, 3.73118942204195, 5.13995912804211, 7.08063216567683, 9.75403706852328, 13.4368283661621, 18.5101158908178]
-contourRafal1.PointMergeMethod = 'Uniform Binning'
-
 # ----------------------------------------------------------------
 # setup color maps and opacity mapes used in the visualization
 # note: the Get..() functions create a new object, if needed
 # ----------------------------------------------------------------
+
+# get color transfer function/color map for 'TempsCelc'
+tempsCelcLUT = GetColorTransferFunction('TempsCelc')
+tempsCelcLUT.EnableOpacityMapping = 1
+tempsCelcLUT.RGBPoints = [-12.3609375, 0.0862745098039216, 0.00392156862745098, 0.298039215686275, -11.3828809030349, 0.113725, 0.0235294, 0.45098, -10.5705986141464, 0.105882, 0.0509804, 0.509804, -10.0069730531882, 0.0392157, 0.0392157, 0.560784, -9.4599241047609, 0.0313725, 0.0980392, 0.6, -8.92945365385593, 0.0431373, 0.164706, 0.639216, -8.1669030875517, 0.054902, 0.243137, 0.678431, -7.15569202333481, 0.054902, 0.317647, 0.709804, -5.91240234375003, 0.0509804, 0.396078, 0.741176, -5.10633544921877, 0.0392157, 0.466667, 0.768627, -4.30026855468752, 0.0313725, 0.537255, 0.788235, -3.45897359453966, 0.0313725, 0.615686, 0.811765, -2.59695958306693, 0.0235294, 0.709804, 0.831373, -1.73494368660284, 0.0509804, 0.8, 0.85098, -1.0221248428829, 0.0705882, 0.854902, 0.870588, -0.359035836756119, 0.262745, 0.901961, 0.862745, 0.22116633673315, 0.423529, 0.941176, 0.87451, 1.1163354582593, 0.572549, 0.964706, 0.835294, 1.71311612927081, 0.658824, 0.980392, 0.843137, 2.14412313500717, 0.764706, 0.980392, 0.866667, 2.60828430830128, 0.827451, 0.980392, 0.886275, 3.52003098485399, 0.913725, 0.988235, 0.937255, 3.80184376533314, 1.0, 1.0, 0.972549019607843, 4.08365654581228, 0.988235, 0.980392, 0.870588, 4.49808693901756, 0.992156862745098, 0.972549019607843, 0.803921568627451, 4.81305388705445, 0.992157, 0.964706, 0.713725, 5.34352433795942, 0.988235, 0.956863, 0.643137, 6.18896173690117, 0.980392, 0.917647, 0.509804, 6.90178246561236, 0.968627, 0.87451, 0.407843, 7.63117980685453, 0.94902, 0.823529, 0.321569, 8.16165025775947, 0.929412, 0.776471, 0.278431, 8.94077932158593, 0.909804, 0.717647, 0.235294, 9.63702155277484, 0.890196, 0.658824, 0.196078, 10.208935546875, 0.878431, 0.619608, 0.168627, 11.0150024414063, 0.870588, 0.54902, 0.156863, 11.8210693359375, 0.85098, 0.47451, 0.145098, 12.6271362304688, 0.831373, 0.411765, 0.133333, 13.433203125, 0.811765, 0.345098, 0.113725, 14.2392700195313, 0.788235, 0.266667, 0.0941176, 15.0453369140625, 0.741176, 0.184314, 0.0745098, 15.8514038085938, 0.690196, 0.12549, 0.0627451, 16.657470703125, 0.619608, 0.0627451, 0.0431373, 17.4117338702351, 0.54902, 0.027451, 0.0705882, 18.0748223167552, 0.470588, 0.0156863, 0.0901961, 18.8207967712292, 0.4, 0.00392157, 0.101961, 19.88173828125, 0.188235294117647, 0.0, 0.0705882352941176]
+tempsCelcLUT.ColorSpace = 'Lab'
+tempsCelcLUT.AboveRangeColor = [0.5, 0.5, 0.5]
+tempsCelcLUT.ScalarRangeInitialized = 1.0
+
+# get opacity transfer function/opacity map for 'TempsCelc'
+tempsCelcPWF = GetOpacityTransferFunction('TempsCelc')
+tempsCelcPWF.Points = [-12.3609375, 0.0, 0.5, 0.0, 19.88173828125, 1.0, 0.5, 0.0]
+tempsCelcPWF.ScalarRangeInitialized = 1
 
 # get color transfer function/color map for 'CalcWindspeed'
 calcWindspeedLUT = GetColorTransferFunction('CalcWindspeed')
@@ -98,19 +111,6 @@ calcWindspeedLUT.ScalarRangeInitialized = 1.0
 calcWindspeedPWF = GetOpacityTransferFunction('CalcWindspeed')
 calcWindspeedPWF.Points = [1.42728332949276, 0.0, 0.5, 0.0, 18.5101158908178, 1.0, 0.5, 0.0]
 calcWindspeedPWF.ScalarRangeInitialized = 1
-
-# get color transfer function/color map for 'TempsCelc'
-tempsCelcLUT = GetColorTransferFunction('TempsCelc')
-tempsCelcLUT.EnableOpacityMapping = 1
-tempsCelcLUT.RGBPoints = [-12.3609375, 0.0862745098039216, 0.00392156862745098, 0.298039215686275, -11.3828809030349, 0.113725, 0.0235294, 0.45098, -10.5705986141464, 0.105882, 0.0509804, 0.509804, -10.0069730531882, 0.0392157, 0.0392157, 0.560784, -9.4599241047609, 0.0313725, 0.0980392, 0.6, -8.92945365385593, 0.0431373, 0.164706, 0.639216, -8.1669030875517, 0.054902, 0.243137, 0.678431, -7.15569202333481, 0.054902, 0.317647, 0.709804, -5.91240234375003, 0.0509804, 0.396078, 0.741176, -5.10633544921877, 0.0392157, 0.466667, 0.768627, -4.30026855468752, 0.0313725, 0.537255, 0.788235, -3.45897359453966, 0.0313725, 0.615686, 0.811765, -2.59695958306693, 0.0235294, 0.709804, 0.831373, -1.73494368660284, 0.0509804, 0.8, 0.85098, -1.0221248428829, 0.0705882, 0.854902, 0.870588, -0.359035836756119, 0.262745, 0.901961, 0.862745, 0.22116633673315, 0.423529, 0.941176, 0.87451, 1.1163354582593, 0.572549, 0.964706, 0.835294, 1.71311612927081, 0.658824, 0.980392, 0.843137, 2.14412313500717, 0.764706, 0.980392, 0.866667, 2.60828430830128, 0.827451, 0.980392, 0.886275, 3.52003098485399, 0.913725, 0.988235, 0.937255, 3.80184376533314, 1.0, 1.0, 0.972549019607843, 4.08365654581228, 0.988235, 0.980392, 0.870588, 4.49808693901756, 0.992156862745098, 0.972549019607843, 0.803921568627451, 4.81305388705445, 0.992157, 0.964706, 0.713725, 5.34352433795942, 0.988235, 0.956863, 0.643137, 6.18896173690117, 0.980392, 0.917647, 0.509804, 6.90178246561236, 0.968627, 0.87451, 0.407843, 7.63117980685453, 0.94902, 0.823529, 0.321569, 8.16165025775947, 0.929412, 0.776471, 0.278431, 8.94077932158593, 0.909804, 0.717647, 0.235294, 9.63702155277484, 0.890196, 0.658824, 0.196078, 10.208935546875, 0.878431, 0.619608, 0.168627, 11.0150024414063, 0.870588, 0.54902, 0.156863, 11.8210693359375, 0.85098, 0.47451, 0.145098, 12.6271362304688, 0.831373, 0.411765, 0.133333, 13.433203125, 0.811765, 0.345098, 0.113725, 14.2392700195313, 0.788235, 0.266667, 0.0941176, 15.0453369140625, 0.741176, 0.184314, 0.0745098, 15.8514038085938, 0.690196, 0.12549, 0.0627451, 16.657470703125, 0.619608, 0.0627451, 0.0431373, 17.4117338702351, 0.54902, 0.027451, 0.0705882, 18.0748223167552, 0.470588, 0.0156863, 0.0901961, 18.8207967712292, 0.4, 0.00392157, 0.101961, 19.88173828125, 0.188235294117647, 0.0, 0.0705882352941176]
-tempsCelcLUT.ColorSpace = 'Lab'
-tempsCelcLUT.AboveRangeColor = [0.5, 0.5, 0.5]
-tempsCelcLUT.ScalarRangeInitialized = 1.0
-
-# get opacity transfer function/opacity map for 'TempsCelc'
-tempsCelcPWF = GetOpacityTransferFunction('TempsCelc')
-tempsCelcPWF.Points = [-12.3609375, 0.0, 0.5, 0.0, 19.88173828125, 1.0, 0.5, 0.0]
-tempsCelcPWF.ScalarRangeInitialized = 1
 
 # ----------------------------------------------------------------
 # setup the visualization in view 'renderView1'
